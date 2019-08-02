@@ -491,7 +491,6 @@ services:
         traefik.enable: "true"
         traefik.frontend.rule: "Host:doc.${root_domain},gollum.${root_domain}"
         traefik.port: "4567"
-      version: "2.3"
     # Database for cozy
     cozy-db:
       image: apache/couchdb:2.1
