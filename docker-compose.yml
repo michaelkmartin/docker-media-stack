@@ -490,26 +490,32 @@ services:
         traefik.port: "4567"
     # Database for cozy
     cozy-db:
-      image: couchdb:2.1
+      image: couchdb
       volumes:
         - ${docker_data_folder}/cozy-db:/opt/couchdb/data
     # redis for cozy
     cozy-redis:
       image: redis:alpine
-    cozy:
-      image: moritzheiber/cozy-stack
       volumes:
+        - ${docker_data_folder}/cozy-redis:data
+    # cozy
+    cozy:
+      image: wilply/cozy-stack
+      links:
+        - cozy-couchdb:couchdb
+        - cozy-redis:redis
+      volumes:
+        - ${docker_data_folder}/cozy/config:/cozy/config
         - ${docker_data_folder}/cozy/storage:/cozy/storage
       depends_on:
-        - cozy-db
-        - cozy-redis
+        - couchdb
+        - redis
       labels:
         <<: *securityHeaders
         <<: *oauthLabels
         traefik.enable: "true"
         traefik.frontend.rule: "Host:cozy.${root_domain}"
         traefik.port: "8080"
-
 
 networks:
   watchtower:
