@@ -493,7 +493,7 @@ services:
         traefik.port: "4567"
     # Database for cozy
     cozy-db:
-      image: apache/couchdb:2.1
+      image: couchdb:2.1
       volumes:
         - ${docker_data_folder}/cozy-db:/opt/couchdb/data
       networks:
