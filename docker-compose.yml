@@ -489,7 +489,7 @@ services:
         traefik.frontend.rule: "Host:doc.${root_domain},gollum.${root_domain}"
         traefik.port: "4567"
     # Database for cozy
-    cozy-db:
+    cozy-couchdb:
       image: couchdb
       volumes:
         - ${docker_data_folder}/cozy-db:/opt/couchdb/data
