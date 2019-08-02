@@ -508,8 +508,8 @@ services:
         - ${docker_data_folder}/cozy/config:/cozy/config
         - ${docker_data_folder}/cozy/storage:/cozy/storage
       depends_on:
-        - couchdb
-        - redis
+        - cozy-couchdb
+        - cozy-redis
       labels:
         <<: *securityHeaders
         <<: *oauthLabels
