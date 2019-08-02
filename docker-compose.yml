@@ -497,7 +497,7 @@ services:
     cozy-redis:
       image: redis:alpine
       volumes:
-        - ${docker_data_folder}/cozy-redis:data
+        - ${docker_data_folder}/cozy-redis:/data
     # cozy
     cozy:
       image: wilply/cozy-stack
