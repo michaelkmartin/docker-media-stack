@@ -51,9 +51,6 @@ services:
         traefik.port: "8080"
         traefik.frontend.auth.basic.users: ${traefik_credentials}
       <<: *restart
-      networks:
-        - default
-        - cozy
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
         - ${docker_data_folder}/traefik/traefik.toml:/traefik.toml
@@ -496,21 +493,13 @@ services:
       image: couchdb:2.1
       volumes:
         - ${docker_data_folder}/cozy-db:/opt/couchdb/data
-      networks:
-        - cozy
     # redis for cozy
     cozy-redis:
       image: redis:alpine
-      networks:
-        - cozy
     cozy:
       image: moritzheiber/cozy-stack
-      ports:
-        - "8080:8080"
       volumes:
         - ${docker_data_folder}/cozy/storage:/cozy/storage
-      networks:
-        - cozy
       depends_on:
         - cozy-db
         - cozy-redis
@@ -520,14 +509,7 @@ services:
         traefik.enable: "true"
         traefik.frontend.rule: "Host:cozy.${root_domain}"
         traefik.port: "8080"
-        traefik.docker.network: cozy
-
-volumes:
-  couchdb-data:
-  cozy-storage:
 
 
 networks:
   watchtower:
-  cozy:
-    internal: true
