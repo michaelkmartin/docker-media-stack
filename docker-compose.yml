@@ -534,8 +534,6 @@ services:
 
   # JS CMS
   ghost_margot:
-    depends_on:
-      - "traefik"
     environment:
       <<: *conf
       url: "https://margot.${tld}"
@@ -559,6 +557,42 @@ services:
       - traefik
     <<: *restart
     image: ghost:alpine
+
+  # Matrix chat server
+  matrix:
+    environment:
+      <<: *conf
+      SYNAPSE_SERVER_NAME: ${root_domain}
+      SYNAPSE_REPORT_STATS: "false"
+      UID: ${UID}
+      GID: ${GID}
+    labels:
+      <<: *securityHeaders
+      traefik.enable: "true"
+      traefik.frontend.rule: "Host:matrix.${root_domain}"
+      traefik.port: "8008"
+    volumes:
+      - ${docker_data_folder}/matrix:/data
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - traefik
+    <<: *restart
+    image: matrixdotorg/synapse:latest
+
+  # Matrix chat client
+  riot:
+    labels:
+      <<: *securityHeaders
+      traefik.enable: "true"
+      traefik.frontend.rule: "Host:riot.${root_domain}"
+      traefik.port: "80"
+    volumes:
+      - ${docker_data_folder}/riot:/app
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - traefik
+    <<: *restart
+    image: vectorim/riot-web:latest
 
   # personal cloud
   nextcloud:
