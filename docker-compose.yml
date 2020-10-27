@@ -936,7 +936,7 @@ services:
       USERMAP_GID: ${GID}
       PAPERLESS_USE_SSL: "false"
       PAPERLESS_ALLOWED_HOSTS: paperless.${root_domain}
-      PAPERLESS_CORS_ALLOWED_HOSTS: localhost:8080,paperless.${root_domain}
+      PAPERLESS_CORS_ALLOWED_HOSTS: http://localhost:8080,https://paperless.${root_domain}
       PAPERLESS_DISABLE_LOGIN: "true"
       PAPERLESS_OCR_THREADS: "8"
       PAPERLESS_OCR_LANGUAGES: fra eng
