@@ -927,6 +927,41 @@ services:
     <<: *restart
     <<: *logging
 
+  # Document management web application
+  paperless:
+    image: thepaperlessproject/paperless:latest
+    environment:
+      <<: *conf
+      USERMAP_UID: ${UID}
+      USERMAP_GID: ${GID}
+      PAPERLESS_USE_SSL: "false"
+      PAPERLESS_ALLOWED_HOSTS: paperless.${root_domain}
+      PAPERLESS_CORS_ALLOWED_HOSTS: localhost:8080,paperless.${root_domain}
+      PAPERLESS_DISABLE_LOGIN: "true"
+      PAPERLESS_OCR_THREADS: "8"
+      PAPERLESS_OCR_LANGUAGES: fra eng
+    volumes:
+      - ${docker_data_folder}/paperless/data:/usr/src/paperless/data
+      - ${docker_data_folder}/paperless/media:/usr/src/paperless/media
+    networks:
+      - traefik
+    mem_limit: 2048m
+    <<: *restart
+    <<: *logging
+    command: ["gunicorn", "-b", "0.0.0.0:8000"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    labels:
+      <<: *traefik
+      traefik.http.routers.paperless.rule: Host(`paperless.${root_domain}`)
+      # service
+      traefik.http.services.paperless.loadbalancer.server.port: "8000"
+      # Forward auth
+      traefik.http.routers.paperless.middlewares: keycloak-forward-auth
+
   ##################################################################
   # Authentication
 
