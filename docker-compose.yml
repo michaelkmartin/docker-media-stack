@@ -230,7 +230,7 @@ services:
 
   # jackett tracker site scraper with API
   jackett:
-    image: guillaumedsde/jackett-distroless:latest
+    image: guillaumedsde/jackett-distroless:latest-distroless
     <<: *restart
     <<: *logging
     depends_on:
@@ -242,13 +242,11 @@ services:
     tmpfs:
       - "/var:rw,exec"
       - "/tmp:rw,exec"
+    user: ${UID}:${GID}
     read_only: true
     cpus: "4"
     mem_limit: 1g
     network_mode: service:wireguard
-    environment:
-      <<: *conf
-      S6_READ_ONLY_ROOT: "1"
     labels:
       com.centurylinklabs.watchtower.depends-on: wireguard
 
