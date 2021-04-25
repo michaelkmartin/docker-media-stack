@@ -242,6 +242,8 @@ services:
     tmpfs:
       - "/var:rw,exec"
       - "/tmp:rw,exec"
+    environment:
+      <<: *conf
     user: ${UID}:${GID}
     read_only: true
     cpus: "4"
@@ -282,7 +284,7 @@ services:
 
   # jackett tracker site scraper with API
   hydra:
-    image: guillaumedsde/nzbhydra2-distroless:latest
+    image: guillaumedsde/nzbhydra2-distroless:latest-distroless
     hostname: hydra.${root_domain}
     <<: *restart
     <<: *logging
@@ -296,6 +298,7 @@ services:
     tmpfs:
       - "/var:rw,exec"
       - "/tmp:rw,exec"
+    user: ${UID}:${GID}
     read_only: true
     mem_limit: 750m
     cpus: "2"
@@ -303,7 +306,6 @@ services:
       - traefik
     environment:
       <<: *conf
-      S6_READ_ONLY_ROOT: 1
     labels:
       <<: *traefik
       traefik.http.routers.nzbhydra.rule: Host(`hydra.${root_domain}`)
